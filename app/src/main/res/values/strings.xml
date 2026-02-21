@@ -15,8 +15,8 @@
     <string name="debug_info">touched: air:%d %s size:%f\n%s</string>
     <string name="current_latency">Current Latency: %f ms</string>
     <string name="press_again_to_exit">Press again to exit</string>
-    <string name="show_delay">Show Delay</string>
-    <string name="address">Address</string>
+    <string name="show_delay">Latency</string>
+    <string name="address">192.168.x.x:52469</string>
     <string name="enable_vibration">Vibration</string>
 
     <string name="tcp">TCP</string>

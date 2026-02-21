@@ -87,7 +87,26 @@
                 app:layout_constraintStart_toEndOf="@+id/button_coin"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/text_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#444444"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="8dp"
+                android:text="@string/udp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
+                app:layout_constraintEnd_toStartOf="@+id/textInputLayout"
+                app:layout_constraintTop_toTopOf="@+id/textInputLayout" />
+
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout"
                 android:layout_width="195dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -117,17 +136,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <CheckBox
-                android:id="@+id/check_debug"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/show_debug_info"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_coin" />
-
             <TextView
                 android:id="@+id/button_test"
                 android:layout_width="wrap_content"
@@ -138,8 +146,9 @@
                 android:focusable="true"
                 android:text="@string/test"
                 android:textColor="@color/white"
-                app:layout_constraintStart_toEndOf="@id/check_debug"
-                app:layout_constraintTop_toTopOf="@+id/check_debug" />
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_coin" />
 
             <TextView
                 android:id="@+id/button_service"
@@ -147,12 +156,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/highlight_border_1dp"
-                android:text="@string/service"
-                android:textColor="@color/white"
                 android:clickable="true"
                 android:focusable="true"
+                android:text="@string/service"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toEndOf="@id/button_test"
                 app:layout_constraintTop_toTopOf="@id/button_test" />
+
+            <CheckBox
+                android:id="@+id/check_debug"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/show_debug_info"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toEndOf="@+id/button_service"
+                app:layout_constraintTop_toTopOf="@+id/button_service" />
 
             <CheckBox
                 android:id="@+id/check_show_delay"
@@ -161,56 +180,38 @@
                 android:layout_marginStart="4dp"
                 android:text="@string/show_delay"
                 android:textColor="@color/white"
-                app:layout_constraintStart_toEndOf="@+id/button_service"
-                app:layout_constraintTop_toTopOf="@+id/button_service" />
-
-            <TextView
-                android:id="@+id/text_mode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:background="#444444"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:padding="8dp"
-                android:text="@string/udp"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/check_show_delay"
-                app:layout_constraintStart_toEndOf="@+id/check_show_delay"
-                app:layout_constraintTop_toTopOf="@+id/check_show_delay" />
-
-            <Button
-                android:id="@+id/button_flip_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Flip Camera"
-                app:layout_constraintBottom_toBottomOf="@+id/text_mode"
-                app:layout_constraintStart_toEndOf="@+id/text_mode"
-                app:layout_constraintTop_toTopOf="@+id/text_mode" />
-
-            <Button
-                android:id="@+id/button_recalibrate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Recalibrate"
-                app:layout_constraintBottom_toBottomOf="@+id/button_flip_camera"
-                app:layout_constraintStart_toEndOf="@+id/button_flip_camera"
-                app:layout_constraintTop_toTopOf="@+id/button_flip_camera" />
+                app:layout_constraintStart_toEndOf="@+id/check_debug"
+                app:layout_constraintTop_toTopOf="@+id/check_debug" />
 
             <Button
                 android:id="@+id/button_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:text="@string/settings"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/button_recalibrate" />
+
+            <Button
+                android:id="@+id/button_recalibrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Recalibrate"
                 app:layout_constraintBottom_toBottomOf="@+id/button_flip_camera"
-                app:layout_constraintStart_toEndOf="@+id/button_recalibrate"
+                app:layout_constraintEnd_toStartOf="@+id/button_settings"
                 app:layout_constraintTop_toTopOf="@+id/button_flip_camera" />
+
+            <Button
+                android:id="@+id/button_flip_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Flip Camera"
+                app:layout_constraintBottom_toBottomOf="@+id/check_show_delay"
+                app:layout_constraintEnd_toStartOf="@+id/button_recalibrate"
+                app:layout_constraintTop_toTopOf="@+id/check_show_delay" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </net.cachapa.expandablelayout.ExpandableLayout>
