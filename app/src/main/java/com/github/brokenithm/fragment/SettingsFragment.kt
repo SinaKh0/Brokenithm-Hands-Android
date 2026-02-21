@@ -12,7 +12,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceManager.sharedPreferencesName = "settings"
         setPreferencesFromResource(R.xml.preferences, rootKey)
         val setDecimalEdit = { editText: EditText -> editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL }
-        val entries = listOf("fat_touch_threshold", "extra_fat_touch_threshold", "gyro_air_lowest", "gyro_air_highest", "accel_air_threshold")
+        val entries = listOf("camera_air_sensitivity")
         for (entry in entries)
             findPreference<EditTextPreference>(entry)?.setOnBindEditTextListener(setDecimalEdit)
     }

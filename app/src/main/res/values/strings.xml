@@ -37,4 +37,6 @@
     <string name="enable_touch_size">Enable Touch Size Check</string>
     <string name="enable_nfc">Enable NFC</string>
     <string name="enable_vibrate">Enable Vibration</string>
+
+    <string name="debug_info_camera">Air: %1$d | Zones: %2$s</string>
 </resources>

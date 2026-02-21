@@ -50,39 +50,31 @@ class BrokenithmApplication : Application() {
         override fun update(value: Float) = config.edit().putString(key, value.toString()).apply()
     }
 
-    lateinit var lastServer : StringPreference
-    lateinit var enableAir : BooleanPreference
-    lateinit var airSource : IntegerPreference
-    lateinit var simpleAir : BooleanPreference
-    lateinit var showDelay : BooleanPreference
-    lateinit var enableVibrate : BooleanPreference
-    lateinit var tcpMode : BooleanPreference
-    lateinit var enableNFC : BooleanPreference
-    lateinit var wideTouchRange : BooleanPreference
-    lateinit var enableTouchSize : BooleanPreference
-    lateinit var fatTouchThreshold : FloatPreference
-    lateinit var extraFatTouchThreshold : FloatPreference
-    lateinit var gyroAirLowestBound : FloatPreference
-    lateinit var gyroAirHighestBound : FloatPreference
-    lateinit var accelAirThreshold : FloatPreference
+    lateinit var lastServer: StringPreference
+    lateinit var enableAir: BooleanPreference
+    lateinit var showDelay: BooleanPreference
+    lateinit var tcpMode: BooleanPreference
+    lateinit var enableNFC: BooleanPreference
+    lateinit var useFrontCamera: BooleanPreference
+    lateinit var cameraAirSensitivity: FloatPreference
+    lateinit var roiCenterX: IntegerPreference
+    lateinit var roiCenterY: IntegerPreference
+    lateinit var roiWidth: IntegerPreference
+    lateinit var roiSpacing: IntegerPreference
 
     override fun onCreate() {
         super.onCreate()
         lastServer = StringPreference(this, "server", "")
         enableAir = BooleanPreference(this, "enable_air", true)
-        airSource = IntegerPreference(this, "air_source", 3)
-        simpleAir = BooleanPreference(this, "simple_air", false)
         showDelay = BooleanPreference(this, "show_delay", false)
-        enableVibrate = BooleanPreference(this, "enable_vibrate", true)
         tcpMode = BooleanPreference(this, "tcp_mode", false)
         enableNFC = BooleanPreference(this, "enable_nfc", true)
-        wideTouchRange = BooleanPreference(this, "wide_touch_range", false)
-        enableTouchSize = BooleanPreference(this, "enable_touch_size", false)
-        fatTouchThreshold = FloatPreference(this, "fat_touch_threshold", 0.027f)
-        extraFatTouchThreshold = FloatPreference(this, "extra_fat_touch_threshold", 0.035f)
-        gyroAirLowestBound = FloatPreference(this, "gyro_air_lowest", 0.8f)
-        gyroAirHighestBound = FloatPreference(this, "gyro_air_highest", 1.35f)
-        accelAirThreshold = FloatPreference(this, "accel_air_threshold", 2f)
+        useFrontCamera = BooleanPreference(this, "use_front_camera", true)
+        cameraAirSensitivity = FloatPreference(this, "camera_air_sensitivity", 0.15f)
+        roiCenterX = IntegerPreference(this, "roi_center_x", 50)
+        roiCenterY = IntegerPreference(this, "roi_center_y", 50)
+        roiWidth = IntegerPreference(this, "roi_width", 30)
+        roiSpacing = IntegerPreference(this, "roi_spacing", 2)
     }
 
     companion object {
