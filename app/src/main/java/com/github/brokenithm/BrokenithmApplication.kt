@@ -61,6 +61,7 @@ class BrokenithmApplication : Application() {
     lateinit var roiCenterY: IntegerPreference
     lateinit var roiWidth: IntegerPreference
     lateinit var roiSpacing: IntegerPreference
+    lateinit var useCalibrationMode: BooleanPreference
 
     override fun onCreate() {
         super.onCreate()
@@ -73,8 +74,9 @@ class BrokenithmApplication : Application() {
         cameraAirSensitivity = FloatPreference(this, "camera_air_sensitivity", 0.15f)
         roiCenterX = IntegerPreference(this, "roi_center_x", 50)
         roiCenterY = IntegerPreference(this, "roi_center_y", 50)
-        roiWidth = IntegerPreference(this, "roi_width", 10)
-        roiSpacing = IntegerPreference(this, "roi_spacing", 5)
+        roiWidth = IntegerPreference(this, "roi_width", 20)
+        roiSpacing = IntegerPreference(this, "roi_spacing", 2)
+        useCalibrationMode = BooleanPreference(this, "use_calibration_mode", true)
     }
 
     companion object {

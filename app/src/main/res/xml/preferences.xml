@@ -34,5 +34,11 @@
             android:max="20"
             android:title="Sensor Spacing"
             app:showSeekBarValue="true" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="use_calibration_mode"
+            android:title="Presence Detection"
+            android:summary="Detects stationary hands. Disable for motion-only detection." />
     </PreferenceCategory>
 </PreferenceScreen>

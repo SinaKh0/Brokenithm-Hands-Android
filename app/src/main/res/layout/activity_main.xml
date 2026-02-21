@@ -193,13 +193,23 @@
                 app:layout_constraintTop_toTopOf="@+id/text_mode" />
 
             <Button
+                android:id="@+id/button_recalibrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Recalibrate"
+                app:layout_constraintBottom_toBottomOf="@+id/button_flip_camera"
+                app:layout_constraintStart_toEndOf="@+id/button_flip_camera"
+                app:layout_constraintTop_toTopOf="@+id/button_flip_camera" />
+
+            <Button
                 android:id="@+id/button_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@string/settings"
                 app:layout_constraintBottom_toBottomOf="@+id/button_flip_camera"
-                app:layout_constraintStart_toEndOf="@+id/button_flip_camera"
+                app:layout_constraintStart_toEndOf="@+id/button_recalibrate"
                 app:layout_constraintTop_toTopOf="@+id/button_flip_camera" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -103,6 +103,9 @@ class MainActivity : AppCompatActivity() {
     private var mRoiCenterY = 0.5f
     private var mRoiWidth = 0.3f
     private var mRoiSpacing = 0.02f
+    private var mUseCalibrationMode = true
+    private var mBaselineFrame: FloatArray? = null
+    private var mIsCalibrated = false
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -283,6 +286,14 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST)
         }
 
+        val recalibrateButton = findViewById<Button>(R.id.button_recalibrate)
+        recalibrateButton.visibility = if (app.useCalibrationMode.value()) View.VISIBLE else View.GONE
+        recalibrateButton.setOnClickListener {
+            mBaselineFrame = null
+            mIsCalibrated = false
+            Toast.makeText(this, "Move hands away then wait...", Toast.LENGTH_SHORT).show()
+        }
+
         initTasks()
     }
 
@@ -343,47 +354,76 @@ class MainActivity : AppCompatActivity() {
         buffer.get(yData)
         imageProxy.close()
 
-        val prev = mLastFrame
-        mLastFrame = yData
-        if (prev == null || prev.size != yData.size) return
-
-        // ROI bounds — width only, height is full camera height
         val roiWidthPx = (mRoiWidth * width).toInt()
         val roiLeft = ((mRoiCenterX * width) - roiWidthPx / 2).toInt().coerceIn(0, width)
         val roiRight = (roiLeft + roiWidthPx).coerceIn(0, width)
-        val roiTop = 0
-        val roiBottom = height
 
-        val zoneHeightPx = (0.05f * height).toInt() // fixed at 5% of frame height
+        val zoneHeightPx = (0.05f * height).toInt()
         val spacingPx = (mRoiSpacing * height).toInt()
         val totalBlockHeight = numOfAirBlock * zoneHeightPx + (numOfAirBlock - 1) * spacingPx
         val blockTop = ((mRoiCenterY * height) - totalBlockHeight / 2).toInt().coerceIn(0, height)
 
-        val totalSpacing = spacingPx * (numOfAirBlock - 1)
-        val zoneHeight = (height - totalSpacing) / numOfAirBlock
+        val threshold = (mCameraAirSensitivity * 255).toInt().coerceIn(5, 200)
         val newZoneStates = BooleanArray(numOfAirBlock) { false }
 
-        val threshold = (mCameraAirSensitivity * 255).toInt().coerceIn(10, 200)
-
-        for (zone in 0 until numOfAirBlock) {
-            val rowStart = blockTop + zone * (zoneHeightPx + spacingPx)
-            val rowEnd = (rowStart + zoneHeightPx).coerceIn(0, height)
-            var motionPixels = 0
-            var totalPixels = 0
-
-            for (row in rowStart until rowEnd) {
-                val rowOffset = row * rowStride
-                for (col in roiLeft until roiRight) {
-                    val idx = rowOffset + col
-                    if (idx >= yData.size || idx >= prev.size) continue
-                    val diff = kotlin.math.abs(
-                        (yData[idx].toInt() and 0xff) - (prev[idx].toInt() and 0xff)
-                    )
-                    if (diff > threshold) motionPixels++
-                    totalPixels++
+        if (mUseCalibrationMode) {
+            // Calculate average brightness per zone
+            val zoneBrightness = FloatArray(numOfAirBlock)
+            for (zone in 0 until numOfAirBlock) {
+                val rowStart = blockTop + zone * (zoneHeightPx + spacingPx)
+                val rowEnd = (rowStart + zoneHeightPx).coerceIn(0, height)
+                var total = 0L
+                var count = 0
+                for (row in rowStart until rowEnd) {
+                    val rowOffset = row * rowStride
+                    for (col in roiLeft until roiRight) {
+                        val idx = rowOffset + col
+                        if (idx >= yData.size) continue
+                        total += yData[idx].toInt() and 0xff
+                        count++
+                    }
                 }
+                zoneBrightness[zone] = if (count > 0) total.toFloat() / count else 0f
             }
-            newZoneStates[zone] = totalPixels > 0 && motionPixels.toFloat() / totalPixels > 0.02f
+
+            // Auto-calibrate on first frame
+            if (mBaselineFrame == null) {
+                mBaselineFrame = zoneBrightness.copyOf()
+                mIsCalibrated = true
+                return
+            }
+
+            val baseline = mBaselineFrame!!
+            for (zone in 0 until numOfAirBlock) {
+                val diff = kotlin.math.abs(zoneBrightness[zone] - baseline[zone])
+                newZoneStates[zone] = diff > threshold
+            }
+
+        } else {
+            // Motion detection — compare against previous frame
+            val prev = mLastFrame
+            mLastFrame = yData
+            if (prev == null || prev.size != yData.size) return
+
+            for (zone in 0 until numOfAirBlock) {
+                val rowStart = blockTop + zone * (zoneHeightPx + spacingPx)
+                val rowEnd = (rowStart + zoneHeightPx).coerceIn(0, height)
+                var motionPixels = 0
+                var totalPixels = 0
+                for (row in rowStart until rowEnd) {
+                    val rowOffset = row * rowStride
+                    for (col in roiLeft until roiRight) {
+                        val idx = rowOffset + col
+                        if (idx >= yData.size || idx >= prev.size) continue
+                        val diff = kotlin.math.abs(
+                            (yData[idx].toInt() and 0xff) - (prev[idx].toInt() and 0xff)
+                        )
+                        if (diff > threshold) motionPixels++
+                        totalPixels++
+                    }
+                }
+                newZoneStates[zone] = totalPixels > 0 && motionPixels.toFloat() / totalPixels > 0.02f
+            }
         }
 
         mZoneStates = newZoneStates
@@ -428,6 +468,13 @@ class MainActivity : AppCompatActivity() {
         mRoiCenterY = app.roiCenterY.value() / 100f
         mRoiWidth = app.roiWidth.value() / 100f
         mRoiSpacing = app.roiSpacing.value() / 100f
+        mUseCalibrationMode = app.useCalibrationMode.value()
+        if (mUseCalibrationMode) {
+            mBaselineFrame = null
+            mIsCalibrated = false
+        }
+        findViewById<Button>(R.id.button_recalibrate).visibility =
+            if (mUseCalibrationMode) View.VISIBLE else View.GONE
         startCamera()
     }
 
