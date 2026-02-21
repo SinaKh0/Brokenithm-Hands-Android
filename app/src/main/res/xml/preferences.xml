@@ -35,10 +35,19 @@
             android:title="Sensor Spacing"
             app:showSeekBarValue="true" />
 
+        <EditTextPreference
+            android:defaultValue="0.08"
+            android:key="camera_air_sensitivity"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Camera Air Sensitivity"
+            android:summary="Brightness change threshold per zone (0.01 - 1.0). Lower = more sensitive. Default: 0.08" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="use_calibration_mode"
             android:title="Presence Detection"
             android:summary="Detects stationary hands. Disable for motion-only detection." />
+
     </PreferenceCategory>
 </PreferenceScreen>

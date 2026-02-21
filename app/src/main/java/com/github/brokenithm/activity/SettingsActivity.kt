@@ -10,5 +10,6 @@ class SettingsActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         supportFragmentManager.beginTransaction().replace(R.id.settings_container, SettingsFragment()).commit()
+        val entries = listOf("camera_air_sensitivity")
     }
 }
