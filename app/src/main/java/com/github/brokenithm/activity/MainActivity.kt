@@ -29,6 +29,9 @@ import kotlin.concurrent.thread
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
+import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 
 class MainActivity : AppCompatActivity() {
     private lateinit var senderTask: AsyncTaskUtil.AsyncTask<InetSocketAddress?, Unit, Unit>
@@ -106,6 +109,10 @@ class MainActivity : AppCompatActivity() {
     private var mUseCalibrationMode = true
     private var mBaselineFrame: FloatArray? = null
     private var mIsCalibrated = false
+
+    private var mScreenDimEnabled = true
+    private lateinit var mBlackOverlay: View
+    private var mScreenDimmed = false
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -256,6 +263,22 @@ class MainActivity : AppCompatActivity() {
         mZoneOverlay = ZoneOverlayView(this)
         val cameraContainer = findViewById<android.widget.FrameLayout>(R.id.camera_container)
         cameraContainer.addView(mZoneOverlay)
+        mBlackOverlay = View(this).apply {
+            setBackgroundColor(Color.BLACK)
+            visibility = View.GONE
+            setOnClickListener {
+                visibility = View.GONE
+                mScreenDimmed = false
+                resetDimTimer()
+            }
+        }
+        val rootView = findViewById<ViewGroup>(android.R.id.content)
+        rootView.addView(mBlackOverlay, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        ))
+
+
 
         findViewById<Button>(R.id.button_flip_camera).setOnClickListener {
             mUseFrontCamera = !mUseFrontCamera
@@ -293,8 +316,19 @@ class MainActivity : AppCompatActivity() {
             mIsCalibrated = false
             Toast.makeText(this, "Move hands away then wait...", Toast.LENGTH_SHORT).show()
         }
-
         initTasks()
+    }
+
+    private val mDimHandler = Handler(Looper.getMainLooper())
+    private val mDimRunnable = Runnable {
+        mBlackOverlay.visibility = View.VISIBLE
+        mScreenDimmed = true
+    }
+
+    private fun resetDimTimer() {
+        mDimHandler.removeCallbacks(mDimRunnable)
+        if (mScreenDimEnabled)
+            mDimHandler.postDelayed(mDimRunnable, 30000)
     }
 
     // ── Camera ────────────────────────────────────────────────────────────────
@@ -476,11 +510,15 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_recalibrate).visibility =
             if (mUseCalibrationMode) View.VISIBLE else View.GONE
         startCamera()
+        resetDimTimer()
+        mScreenDimEnabled = app.screenDimEnabled.value()
+        if (mScreenDimEnabled) resetDimTimer() else mDimHandler.removeCallbacks(mDimRunnable)
     }
 
     override fun onPause() {
         disableNfcForegroundDispatch()
         stopCamera()
+        mDimHandler.removeCallbacks(mDimRunnable)
         super.onPause()
     }
 

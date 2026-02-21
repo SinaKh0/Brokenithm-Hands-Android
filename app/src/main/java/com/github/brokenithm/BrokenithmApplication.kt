@@ -61,7 +61,8 @@ class BrokenithmApplication : Application() {
     lateinit var roiCenterY: IntegerPreference
     lateinit var roiWidth: IntegerPreference
     lateinit var roiSpacing: IntegerPreference
-    lateinit var useCalibrationMode: BooleanPreference
+    lateinit var useCalibrationMode: BooleanPreference;
+    lateinit var screenDimEnabled: BooleanPreference
 
     override fun onCreate() {
         super.onCreate()
@@ -77,6 +78,7 @@ class BrokenithmApplication : Application() {
         roiWidth = IntegerPreference(this, "roi_width", 20)
         roiSpacing = IntegerPreference(this, "roi_spacing", 2)
         useCalibrationMode = BooleanPreference(this, "use_calibration_mode", true)
+        screenDimEnabled = BooleanPreference(this, "screen_dim_enabled", true)
     }
 
     companion object {
