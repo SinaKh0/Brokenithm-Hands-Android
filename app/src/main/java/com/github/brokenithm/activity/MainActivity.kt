@@ -328,7 +328,7 @@ class MainActivity : AppCompatActivity() {
         mCameraProvider = null
         mLastFrame = null
         mZoneStates = BooleanArray(6) { false }
-        mZoneOverlay.updateZones(mZoneStates, mRoiCenterX, mRoiWidth, mRoiSpacing)
+        mZoneOverlay.updateZones(mZoneStates, mRoiCenterX, mRoiCenterY, mRoiWidth, mRoiSpacing)
         mCurrentAirHeight = 6
     }
 
@@ -354,7 +354,11 @@ class MainActivity : AppCompatActivity() {
         val roiTop = 0
         val roiBottom = height
 
+        val zoneHeightPx = (0.05f * height).toInt() // fixed at 5% of frame height
         val spacingPx = (mRoiSpacing * height).toInt()
+        val totalBlockHeight = numOfAirBlock * zoneHeightPx + (numOfAirBlock - 1) * spacingPx
+        val blockTop = ((mRoiCenterY * height) - totalBlockHeight / 2).toInt().coerceIn(0, height)
+
         val totalSpacing = spacingPx * (numOfAirBlock - 1)
         val zoneHeight = (height - totalSpacing) / numOfAirBlock
         val newZoneStates = BooleanArray(numOfAirBlock) { false }
@@ -362,8 +366,8 @@ class MainActivity : AppCompatActivity() {
         val threshold = (mCameraAirSensitivity * 255).toInt().coerceIn(10, 200)
 
         for (zone in 0 until numOfAirBlock) {
-            val rowStart = zone * (zoneHeight + spacingPx)
-            val rowEnd = rowStart + zoneHeight
+            val rowStart = blockTop + zone * (zoneHeightPx + spacingPx)
+            val rowEnd = (rowStart + zoneHeightPx).coerceIn(0, height)
             var motionPixels = 0
             var totalPixels = 0
 
@@ -393,7 +397,7 @@ class MainActivity : AppCompatActivity() {
 
         // Pass ROI bounds to overlay so it draws only within the ROI
         runOnUiThread {
-            mZoneOverlay.updateZones(mZoneStates, mRoiCenterX, mRoiWidth, mRoiSpacing)
+            mZoneOverlay.updateZones(mZoneStates, mRoiCenterX, mRoiCenterY, mRoiWidth, mRoiSpacing)
         }
 
         if (mDebugInfo) {

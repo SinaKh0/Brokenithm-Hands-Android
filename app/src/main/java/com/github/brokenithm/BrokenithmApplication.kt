@@ -73,8 +73,8 @@ class BrokenithmApplication : Application() {
         cameraAirSensitivity = FloatPreference(this, "camera_air_sensitivity", 0.15f)
         roiCenterX = IntegerPreference(this, "roi_center_x", 50)
         roiCenterY = IntegerPreference(this, "roi_center_y", 50)
-        roiWidth = IntegerPreference(this, "roi_width", 30)
-        roiSpacing = IntegerPreference(this, "roi_spacing", 2)
+        roiWidth = IntegerPreference(this, "roi_width", 10)
+        roiSpacing = IntegerPreference(this, "roi_spacing", 5)
     }
 
     companion object {
