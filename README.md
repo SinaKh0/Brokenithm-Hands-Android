@@ -40,9 +40,11 @@ brokenithm.exe -T -s -p 52468  # slider instance
 brokenithm.exe -T -a -p 52469  # air instance
 ```
 
+Connect this app to port 52469 and Brokenithm-Slide-Android on the other android device to port 52468.
+
 ## Low Latency Setup (USB)
 
-For the lowest latency, connect your device via USB and use ADB reverse port forwarding instead of WiFi. With both devices plugged in run:
+For the lowest latency, connect your devices via USB and use ADB reverse port forwarding instead of WiFi. With both devices plugged in run:
 ```bash
 adb devices  # to get serial of both devices
 adb -s <slider_device_serial> reverse tcp:52468 tcp:52468
