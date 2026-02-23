@@ -2,7 +2,14 @@
 
 A fork of [Brokenithm-Android](https://github.com/tindy2013/Brokenithm-Android) that replaces the touch-based air sensor input with camera-based hand detection.
 
-Slider input has been removed. This app is intended to be used alongside the original Brokenithm-Android handling slider input, with two instances of the [modified server](https://github.com/SinaKh0/Brokenithm-Android-Server) using the `-a` (air only) and `-s` (slider only) flags to split input across two devices.
+Slider input has been removed. This app is intended to be used alongside [Brokenithm-Hands-Android](https://github.com/SinaKh0/Brokenithm-Slide-Android) handling air input, with two instances of the [modified server](https://github.com/SinaKh0/Brokenithm-Android-Server) using the `-s` (slider only) and `-a` (air only) flags to split input across two devices.
+
+Supports UDP and TCP connection to host. TCP recommended for lower latency.
+
+<p align="center">
+  <img src="screenshots/Screenshot.jpg" width="300" alt="screenshot"/>
+</p>
+
 ## Settings
 
 **Presence Detection** - **when enabled**, the app calibrates a brightness baseline per zone on startup and detects hands by comparing against it. Supports stationary hands. **When disabled**, switches to motion detection mode which only triggers when something is moving in a zone.
@@ -17,8 +24,29 @@ Slider input has been removed. This app is intended to be used alongside the ori
 
 **Camera Air Sensitivity** - controls how sensitive the zones are to brightness changes. Lower values trigger more easily, higher values require a more significant change (0.01 - 1.0). Recommended: 0.08
 
+**Auto Screen Dim** - when enabled, the screen turns black after 30 seconds of inactivity to save battery and protect OLED displays. The camera and air detection continue running in the background. Tap the screen to wake it back up.
+
 ## Presence Detection vs Motion Detection
 
 **Enable Presence Detection** if you play by holding your hand still in the sensor region. The app detects your hand as long as it remains in a zone without needing to move. Recalibration is needed in this mode.
 
 **Disable Presence Detection (use Motion Detection)** if you play by waving or moving your hand through the sensor region. This mode only triggers when movement is detected. Recalibration is not needed in this mode and can result in a smoother experience.
+
+## Dual Device Setup
+
+To use both apps together, run two server instances on Windows:
+```bash
+brokenithm.exe -T -s -p 52468  # slider instance
+brokenithm.exe -T -a -p 52469  # air instance
+```
+
+## Low Latency Setup (USB)
+
+For the lowest latency, connect your device via USB and use ADB reverse port forwarding instead of WiFi. With both devices plugged in run:
+```bash
+adb devices  # to get serial of both devices
+adb -s <slider_device_serial> reverse tcp:52468 tcp:52468
+adb -s <hands_device_serial> reverse tcp:52469 tcp:52469
+```
+
+Then in each app use `127.0.0.1:PORT` as the server address and enable TCP mode.
