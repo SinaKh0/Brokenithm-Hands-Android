@@ -7,7 +7,7 @@ Slider input has been removed. This app is intended to be used alongside [Broken
 Supports UDP and TCP connection to host. TCP recommended for lower latency.
 
 <p align="center">
-  <img src="screenshots/Screenshot.jpg" width="300" alt="screenshot"/>
+  <img src="screenshots/Screenshot.jpg" width="500" alt="screenshot"/>
 </p>
 
 ## Settings
