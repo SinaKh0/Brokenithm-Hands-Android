@@ -2,7 +2,7 @@
 
 A fork of [Brokenithm-Android](https://github.com/tindy2013/Brokenithm-Android) that replaces the touch-based air sensor input with camera-based hand detection.
 
-Slider input has been removed. This app is intended to be used alongside [Brokenithm-Hands-Android](https://github.com/SinaKh0/Brokenithm-Slide-Android) handling air input, with two instances of the [modified server](https://github.com/SinaKh0/Brokenithm-Android-Server) using the `-s` (slider only) and `-a` (air only) flags to split input across two devices.
+Slider input has been removed. This app is intended to be used alongside [Brokenithm-Slide-Android](https://github.com/SinaKh0/Brokenithm-Slide-Android) handling slider input, with two instances of the [modified server](https://github.com/SinaKh0/Brokenithm-Android-Server) using the `-s` (slider only) and `-a` (air only) flags to split input across two devices.
 
 Supports UDP and TCP connection to host. TCP recommended for lower latency.
 
